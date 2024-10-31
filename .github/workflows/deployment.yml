@@ -20,3 +20,6 @@ jobs:
       # Step 2: Print "Hello, World!" to the logs
       - name: Say Hello
         run: echo "Hello, World!"
+      - name: List content
+        run: ls -al
+        
