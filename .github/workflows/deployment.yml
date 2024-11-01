@@ -21,4 +21,4 @@ jobs:
         aws-region: ap-south-1  # Specify your desired AWS region
 
     - name: Copy specific files to S3
-       aws s3 sync . s3://static-demo-website --delete --exclude ".git/*"
+      run: aws s3 sync . s3://static-demo-website --delete --exclude ".git/*"
