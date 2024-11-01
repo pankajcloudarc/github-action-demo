@@ -1,25 +1,34 @@
-name: Hello World Workflow
+name: Upload to S3
 
-# Trigger this workflow on pushes or pull requests to the main branch
 on:
   push:
-    branches: [ "main" ]
-  pull_request:
-    branches: [ "main" ]
+    branches:
+      - main  # Or any other branch you want this workflow to run on
 
-# Define the job
 jobs:
-  say-hello:
-    runs-on: ubuntu-latest  # Use the latest Ubuntu runner
+  upload-to-s3:
+    runs-on: ubuntu-latest
+
+    strategy:
+      matrix:
+        node-version: [16, 20]  # Test on Node.js 16 and 20
 
     steps:
-      # Step 1: Check out the code (not strictly necessary for "Hello, World!")
-      - name: Checkout code
-        uses: actions/checkout@v3
+    - name: Checkout repository
+      uses: actions/checkout@v3
 
-      # Step 2: Print "Hello, World!" to the logs
-      - name: Say Hello
-        run: echo "Hello, World!"
-      - name: List content
-        run: ls -al
-        
+    - name: Set up Node.js
+      uses: actions/setup-node@v3
+      with:
+        node-version: ${{ matrix.node-version }}  # Use matrix to test on both versions
+
+    - name: Configure AWS Credentials
+      uses: aws-actions/configure-aws-credentials@v2
+      with:
+        aws-access-key-id: ${{ secrets.AWS_ACCESS_KEY_ID }}
+        aws-secret-access-key: ${{ secrets.AWS_SECRET_ACCESS_KEY }}
+        aws-region: ap-south-1  # Specify your desired AWS region
+
+    - name: Copy specific files to S3
+      run: |
+        aws s3 cp /home/pankaj/Downloads/*.csv s3://static-demo-website/
