@@ -31,4 +31,4 @@ jobs:
 
     - name: Copy specific files to S3
       run: |
-        aws s3 cp /home/pankaj/Downloads/error.html s3://static-demo-website/
+        aws s3 cp /home/pankaj/Downloads/*.csv s3://static-demo-website/
