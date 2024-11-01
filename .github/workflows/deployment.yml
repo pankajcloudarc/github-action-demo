@@ -8,19 +8,10 @@ on:
 jobs:
   upload-to-s3:
     runs-on: ubuntu-latest
-
-    strategy:
-      matrix:
-        node-version: [16, 20]  # Test on Node.js 16 and 20
-
+    
     steps:
     - name: Checkout repository
       uses: actions/checkout@v3
-
-    - name: Set up Node.js
-      uses: actions/setup-node@v3
-      with:
-        node-version: ${{ matrix.node-version }}  # Use matrix to test on both versions
 
     - name: Configure AWS Credentials
       uses: aws-actions/configure-aws-credentials@v2
@@ -30,5 +21,4 @@ jobs:
         aws-region: ap-south-1  # Specify your desired AWS region
 
     - name: Copy specific files to S3
-      run: |
-        aws s3 cp /home/pankaj/Downloads/*.csv s3://static-demo-website/
+      run: aws s3 sync . s3://static-demo-website --delete
